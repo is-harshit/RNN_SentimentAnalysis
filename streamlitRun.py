@@ -61,8 +61,7 @@ def predict_sentiment(text):
     model=initialise()
     # This function takes in text and returns the sentiment
     # Here you need to adapt the function depending on how your model processes the input
-    prediction = model.predict([text])[0]  # Adjust this line based on how your model expects input
-    print(prediction)
+    prediction = model.predict([text],verbose=0)[0]  # Adjust this line based on how your model expects input
     return "Positive" if prediction > threshold else "Negative"
 
 # Streamlit interface
