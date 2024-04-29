@@ -1,2 +1,3 @@
 keras==2.13.1
 json5==0.9.14
+tensorflow==2.13.0
