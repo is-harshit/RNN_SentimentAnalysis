@@ -95,25 +95,34 @@ def predict_sentiment(text):
 # Streamlit interface
 def main():
     st.title("Sentiment Analysis App")
-    user_input = st.text_area("Enter Text Here:",)
+    user_input = st.text_area("Enter Text Here:")
 
-    sentimen=0
-    b2 = "Get Llama Take on this"
+    # Initialize button label in session state if not already present
+    if 'sentiment_available' not in st.session_state:
+        st.session_state['sentiment_available'] = False  # Track if sentiment has been analyzed
+        st.session_state['button_label'] = "Get Llama Take on this"  # Default label
+
     if st.button("Analyze"):
         sentiment = predict_sentiment(user_input)
         st.session_state['sentiment'] = sentiment  # Save sentiment to session state
+        st.session_state['sentiment_available'] = True  # Indicate that sentiment has been analyzed
         if "NEG" in sentiment.upper():
-            b2 = "Get Llama Therapy"
+            st.session_state['button_label'] = "Get Llama Therapy"
+        else:
+            st.session_state['button_label'] = "Get Llama Take on this"
         st.write(f"Sentiment: {sentiment}")
 
-    if 'sentiment' in st.session_state:
-        if st.button(b2):
+    # Display the button for llama response only if the sentiment has been analyzed
+    if st.session_state['sentiment_available']:
+        if st.button(st.session_state['button_label']):
             response = llama_response(user_input, 1)
             st.write(f"Llama 3 says: {response}")
 
     if st.button("Clear"):
-        if 'sentiment' in st.session_state:
-            del st.session_state['sentiment']
+        # Clear the session state for user input and sentiment
+        st.session_state['user_input'] = ""
+        st.session_state['sentiment'] = ""
+        st.session_state['sentiment_available'] = False  # Reset the availability of sentiment analysis
 
 if __name__ == '__main__':
     main()
