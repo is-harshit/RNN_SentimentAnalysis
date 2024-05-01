@@ -103,7 +103,7 @@ def GRU_model():
 
 def GRU1():
     model = GRU_model()
-    model.load_weights("./GRU.h5")
+    # model.load_weights("./GRU.h5")
     return model
 
 
