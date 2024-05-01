@@ -73,8 +73,10 @@ def llama_respoense(msg):
         ],
         model="llama3-70b-8192",
     )
+
     sent=chat_completion.choices[0].message.content
 
+    return sent
     if sent.upper().contains("POS"):
        return "Positive"
     else:
