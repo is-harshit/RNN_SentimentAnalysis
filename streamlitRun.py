@@ -3,7 +3,8 @@ from keras.src.preprocessing.text import tokenizer_from_json
 from tensorflow.keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import Sequential
-from keras.layers import Dense, Dropout,Activation,SimpleRNN, Bidirectional, BatchNormalization,LSTM
+from tensorflow.keras.models import Model
+from keras.layers import Dense, Dropout,Activation,SimpleRNN, Bidirectional, BatchNormalization,LSTM,Embedding, GRU,Input,GlobalMaxPooling1D,Dropout,Bidirectional
 from keras import optimizers
 from tensorflow.keras.optimizers import Adam
 from keras.preprocessing.sequence import pad_sequences
@@ -34,6 +35,23 @@ def compatibilate(text):
 
     return a
 
+def simple_RNN_model():
+    model = Sequential()
+    model.add(SimpleRNN(100, input_shape=(maxlen, 1), return_sequences=False))  # Reduced units to prevent overfitting
+    model.add(Dense(50, activation='relu'))  # Added ReLU activation
+    model.add(Dense(25, activation='relu'))  # Simplified architecture
+    model.add(Dense(1, activation='sigmoid'))
+
+    # Correctly use the custom optimizer with a specified learning rate
+    adam = optimizers.Adam(learning_rate=0.001)  # More typical learning rate
+    model.compile(loss='binary_crossentropy', optimizer=adam, metrics=['accuracy'])
+
+    return model
+
+def simple_RNN():
+    model = simple_RNN_model()
+    model.load_weights("./sentiment_weights_Simple.h5")
+    return model
 def lstm_rnn_model():
     model = Sequential()
     # Using LSTM for improved sequence modeling
@@ -48,14 +66,44 @@ def lstm_rnn_model():
 
     return model
 
-# Initialize the model
-def initialise():
+def simple_LSTM_model():
+    model = Sequential()
+    model.add(Embedding(3000, 128))
+    model.add(LSTM(128, dropout=0.2, recurrent_dropout=0.2))
+    model.add(Dense(1, activation='sigmoid'))
+    model.compile(loss='binary_crossentropy',optimizer='adam',metrics=['accuracy'])
 
+    return model
+
+
+def Final_LSTM():
     model = lstm_rnn_model()
     model.load_weights("./sentiment_weights_lstmFin.h5")
     return model
+def Simple_LSTM():
+    model = simple_LSTM_model()
+    model.load_weights("./Simple_LSTM1.h5")
+    return model
 
-threshold= 0.6014326
+
+def GRU_model():
+    learning_rate = 0.0001  # Set your desired learning rate here
+    v=9594
+    inputt=Input(shape=(maxlen,))
+    D=100
+    x = Embedding(v + 1, D)(inputt)
+    x = Dropout(0.5)(x)
+    x = Bidirectional(GRU(200))(x)
+    x = Dense(32, activation='relu')(x)
+    x = Dense(4, activation='softmax')(x)
+
+    model = Model(inputt, x)
+    return model
+
+def GRU():
+    model = GRU_model()
+    model.load_weights("./GRU.h5")
+    return model
 
 
 def llama_response(msg,mode=0):
@@ -80,20 +128,38 @@ def llama_response(msg,mode=0):
     sent=chat_completion.choices[0].message.content
 
     return sent
-    # if sent.upper().contains("POS"):
-    #    return "Positive"
-    # else:
-    #     return "Negative"
 
 def predict_sentiment(text):
-    # model=initialise()
 
 
-    # prediction = model.predict([text],verbose=0)[0]  # Adjust this line based on how your model expects input
-    # return "Negative" if prediction > threshold else "Positive"
+    model_pred=[]
+    model_pred.append(simple_RNN())
+    model_pred.append(Simple_LSTM())
+    model_pred.append(Final_LSTM())
+    model_pred.append(GRU_model())
 
-    sentiment=llama_response(text)
-    return sentiment
+    prediction=[]
+    for i in model_pred:
+        prediction.append(i.predict([text],verbose=0)[0])
+
+    threshold= [0.5035825,0.6317706,0.6014326,0.5776334]
+
+    preds=[]
+
+    sentiment = llama_response(text)
+
+    for i,val in enumerate(prediction):
+        if val>threshold[i]:
+            preds.append(1)
+        else:
+            preds.append(0)
+
+
+    preds.sort()
+    preds.append(sentiment)
+
+    return preds[-1]
+
 # Streamlit interface
 def main():
     st.title("Sentiment Analysis App")
