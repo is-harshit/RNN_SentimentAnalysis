@@ -100,9 +100,11 @@ def main():
         sentiment = predict_sentiment(user_input)
         st.write(f"Sentiment: {sentiment}")
 
-        if st.button("Get Llama Therapy"):
-            sentiment = llama_response(user_input,1)
-            st.write(f"Llama 3 says: {sentiment}")
+    if 'Sentiment' in st.session_state:
+            if st.button("Get Llama Therapy"):
+                response = llama_response(user_input, 1)
+                st.write(f"Llama 3 says: {response}")
+
 
 if __name__ == '__main__':
     main()
