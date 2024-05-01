@@ -103,13 +103,13 @@ def main():
         st.session_state['sentiment'] = sentiment  # Save sentiment to session state
         if "POS" in sentiment.upper():
             sentimen=1
-        st.write(f"Sentiment: {sentiment}")
-
-    if 'sentiment' in st.session_state:
         if sentimen==0:
             b2="Get Llama Therapy"
         else:
             b2="Get Llama Take on this"
+        st.write(f"Sentiment: {sentiment}")
+
+    if 'sentiment' in st.session_state:
         if st.button():
             response = llama_response(user_input, 1)
             st.write(f"Llama 3 says: {response}")
