@@ -132,6 +132,8 @@ def llama_response(msg,mode=0):
 
 def predict_sentiment(text):
 
+    text1=compatibilate(text)
+
 
     model_pred=[]
     model_pred.append(simple_RNN())
@@ -141,7 +143,7 @@ def predict_sentiment(text):
 
     prediction=[]
     for i in range(len(model_pred)-1):
-        prediction.append(i.predict([text],verbose=0)[0])
+        prediction.append(i.predict([text1],verbose=0)[0])
 
     threshold= [0.5035825,0.6317706,0.6014326,0.5776334]
 
