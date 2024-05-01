@@ -10,6 +10,7 @@ from keras.preprocessing.sequence import pad_sequences
 import numpy as np
 from keras.callbacks import EarlyStopping
 import json
+from groq import Groq
 
 
 maxlen=29
@@ -57,6 +58,23 @@ def initialise():
 threshold= 0.6014326
 
 
+def llama_respoense(msg):
+    client = Groq(
+        api_key="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",
+    )
+
+    msg = "This is soo boring and annoying"
+    chat_completion = client.chat.completions.create(
+        messages=[
+            {
+                "role": "user",
+                "content": "Write either positive or negative based on the sentiment for the sentence:" + msg,
+            }
+        ],
+        model="llama3-70b-8192",
+    )
+
+    return chat_completion.choices[0].message.content
 def predict_sentiment(text):
     model=initialise()
     # This function takes in text and returns the sentiment
@@ -75,3 +93,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    
