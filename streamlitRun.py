@@ -3,7 +3,7 @@ from keras.src.preprocessing.text import tokenizer_from_json
 from tensorflow.keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import Sequential
-from tensorflow.keras.models import Model
+# from tensorflow.keras.models import Model
 from keras.layers import Dense, Dropout,Activation,SimpleRNN, Bidirectional, BatchNormalization,LSTM,Embedding, GRU,Input,GlobalMaxPooling1D,Dropout,Bidirectional
 from keras import optimizers
 from tensorflow.keras.optimizers import Adam
@@ -97,7 +97,8 @@ def GRU_model():
     x = Dense(32, activation='relu')(x)
     x = Dense(4, activation='softmax')(x)
 
-    model = Model(inputt, x)
+    model=x
+    # model = Model(inputt, x)
     return model
 
 def GRU():
@@ -136,10 +137,10 @@ def predict_sentiment(text):
     model_pred.append(simple_RNN())
     model_pred.append(Simple_LSTM())
     model_pred.append(Final_LSTM())
-    model_pred.append(GRU_model())
+    model_pred.append(GRU())
 
     prediction=[]
-    for i in model_pred:
+    for i in range(len(model_pred)-1):
         prediction.append(i.predict([text],verbose=0)[0])
 
     threshold= [0.5035825,0.6317706,0.6014326,0.5776334]
