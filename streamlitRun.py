@@ -63,7 +63,6 @@ def llama_respoense(msg):
         api_key="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",
     )
 
-    msg = "This is soo boring and annoying"
     chat_completion = client.chat.completions.create(
         messages=[
             {
@@ -76,12 +75,12 @@ def llama_respoense(msg):
 
     return chat_completion.choices[0].message.content
 def predict_sentiment(text):
-    model=initialise()
-    # This function takes in text and returns the sentiment
-    # Here you need to adapt the function depending on how your model processes the input
-    prediction = model.predict([text],verbose=0)[0]  # Adjust this line based on how your model expects input
-    return "Negative" if prediction > threshold else "Positive"
+    # model=initialise()
 
+
+    # prediction = model.predict([text],verbose=0)[0]  # Adjust this line based on how your model expects input
+    # return "Negative" if prediction > threshold else "Positive"
+    return llama_respoense(text)
 # Streamlit interface
 def main():
     st.title("Sentiment Analysis App")
