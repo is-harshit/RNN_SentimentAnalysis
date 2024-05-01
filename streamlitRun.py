@@ -142,8 +142,8 @@ def predict_sentiment(text):
     model_pred.append(GRU1())
 
     prediction=[]
-    for i in range(len(model_pred)-1):
-        prediction.append(i.predict([text1],verbose=0)[0])
+    # for i in range(len(model_pred)-1):
+    #     prediction.append(i.predict([text1],verbose=0)[0])
 
     threshold= [0.5035825,0.6317706,0.6014326,0.5776334]
 
