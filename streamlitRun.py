@@ -98,15 +98,12 @@ def main():
     user_input = st.text_area("Enter Text Here:",)
 
     sentimen=0
+    b2 = "Get Llama Take on this"
     if st.button("Analyze"):
         sentiment = predict_sentiment(user_input)
         st.session_state['sentiment'] = sentiment  # Save sentiment to session state
-        if "POS" in sentiment.upper():
-            sentimen=1
-        if sentimen==0:
-            b2="Get Llama Therapy"
-        else:
-            b2="Get Llama Take on this"
+        if "NEG" in sentiment.upper():
+            b2 = "Get Llama Therapy"
         st.write(f"Sentiment: {sentiment}")
 
     if 'sentiment' in st.session_state:
