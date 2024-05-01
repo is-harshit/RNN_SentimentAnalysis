@@ -95,10 +95,17 @@ def predict_sentiment(text):
 # Streamlit interface
 def main():
     st.title("Sentiment Analysis App")
-    user_input = st.text_area("Enter Text Here:",)
 
-    sentimen=0
-    b2 = "Get Llama Take on this"
+    # Initialize the user_input in session state if it does not exist
+    if 'user_input' not in st.session_state:
+        st.session_state['user_input'] = ""
+
+    # Text area that uses session state for its value
+    user_input = st.text_area("Enter Text Here:", value=st.session_state['user_input'], key="user_input_area")
+
+    sentiment = ""
+    b2 = "Get Llama Take on this"  # Default button text
+
     if st.button("Analyze"):
         sentiment = predict_sentiment(user_input)
         st.session_state['sentiment'] = sentiment  # Save sentiment to session state
@@ -106,12 +113,15 @@ def main():
             b2 = "Get Llama Therapy"
         st.write(f"Sentiment: {sentiment}")
 
-    if 'sentiment' in st.session_state:
-        if st.button():
+    if 'sentiment' in st.session_state and sentiment:
+        if st.button(b2):  # Show button with dynamic text
             response = llama_response(user_input, 1)
             st.write(f"Llama 3 says: {response}")
 
     if st.button("Clear"):
+        # Clear the text area by setting its value in session state to an empty string
+        st.session_state['user_input'] = ""
+        # Optionally, you can also clear the sentiment and any other data if needed
         if 'sentiment' in st.session_state:
             del st.session_state['sentiment']
 
