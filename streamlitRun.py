@@ -58,12 +58,15 @@ def initialise():
 threshold= 0.6014326
 
 
-def llama_respoense(msg):
+def llama_response(msg,mode=0):
     client = Groq(
         api_key="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",
     )
 
-    te="give the response of this sentence as positive or negative only: " + msg
+    if mode==0:
+       te="give the response of this sentence as positive or negative only: " + msg
+    else:
+        te= "what is ur take on my statement? " +msg
     chat_completion = client.chat.completions.create(
         messages=[
             {
@@ -77,25 +80,29 @@ def llama_respoense(msg):
     sent=chat_completion.choices[0].message.content
 
     return sent
-    if sent.upper().contains("POS"):
-       return "Positive"
-    else:
-        return "Negative"
+    # if sent.upper().contains("POS"):
+    #    return "Positive"
+    # else:
+    #     return "Negative"
+
 def predict_sentiment(text):
     # model=initialise()
 
 
     # prediction = model.predict([text],verbose=0)[0]  # Adjust this line based on how your model expects input
     # return "Negative" if prediction > threshold else "Positive"
-    return llama_respoense(text)
+    return llama_response(text)
 # Streamlit interface
 def main():
     st.title("Sentiment Analysis App")
-    user_input = st.text_area("Enter Text Here:", "Type here...")
-    # user_input=compatibilate(user_input)
+    user_input = st.text_area("Enter Text Here:",)
     if st.button("Analyze"):
         sentiment = predict_sentiment(user_input)
         st.write(f"Sentiment: {sentiment}")
+
+        if st.button("Get Llama Therapy"):
+            sentiment = llama_response(user_input,1)
+            st.write(f"Llama 3 says: {sentiment}")
 
 if __name__ == '__main__':
     main()
