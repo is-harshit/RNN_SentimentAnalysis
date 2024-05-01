@@ -96,16 +96,27 @@ def predict_sentiment(text):
 def main():
     st.title("Sentiment Analysis App")
     user_input = st.text_area("Enter Text Here:",)
+
+    sentimen=0
     if st.button("Analyze"):
         sentiment = predict_sentiment(user_input)
         st.session_state['sentiment'] = sentiment  # Save sentiment to session state
+        if "POS" in sentiment.upper():
+            sentimen=1
         st.write(f"Sentiment: {sentiment}")
 
     if 'sentiment' in st.session_state:
-        if st.button("Get Llama Therapy"):
+        if sentimen==1:
+            b2="Get Llama Therapy"
+        else:
+            b2="Get Llama Take on this"
+        if st.button():
             response = llama_response(user_input, 1)
             st.write(f"Llama 3 says: {response}")
 
+    if st.button("Clear"):
+        if 'sentiment' in st.session_state:
+            del st.session_state['sentiment']
 
 if __name__ == '__main__':
     main()
