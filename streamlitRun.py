@@ -63,7 +63,7 @@ def llama_respoense(msg):
         api_key="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",
     )
 
-    te="give the response of this sentence as positive or negative only: "+ msg
+    te="give the response of this sentence as positive or negative only: " + msg
     chat_completion = client.chat.completions.create(
         messages=[
             {
@@ -90,7 +90,7 @@ def predict_sentiment(text):
 def main():
     st.title("Sentiment Analysis App")
     user_input = st.text_area("Enter Text Here:", "Type here...")
-    user_input=compatibilate(user_input)
+    # user_input=compatibilate(user_input)
     if st.button("Analyze"):
         sentiment = predict_sentiment(user_input)
         st.write(f"Sentiment: {sentiment}")
