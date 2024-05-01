@@ -63,11 +63,12 @@ def llama_respoense(msg):
         api_key="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",
     )
 
+    te="give the response of this sentence as positive or negative only: "+ msg
     chat_completion = client.chat.completions.create(
         messages=[
             {
                 "role": "user",
-                "content": "give the response of this sentence as positive or negative only: "+msg,
+                "content": te,
             }
         ],
         model="llama3-70b-8192",
