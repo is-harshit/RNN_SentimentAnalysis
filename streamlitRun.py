@@ -154,10 +154,8 @@ def predict_sentiment(text):
         else:
             preds.append(0)
 
-
     preds.sort()
     preds.append(sentiment)
-
     return preds[-1]
 
 # Streamlit interface
