@@ -67,7 +67,7 @@ def llama_respoense(msg):
         messages=[
             {
                 "role": "user",
-                "content": "Write either positive or negative based on the sentiment for the sentence:" + msg,
+                "content": "What is lofe",
             }
         ],
         model="llama3-70b-8192",
