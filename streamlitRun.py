@@ -67,13 +67,17 @@ def llama_respoense(msg):
         messages=[
             {
                 "role": "user",
-                "content": "What is lofe",
+                "content": "give the response of this sentence as positive or negative only: "+msg,
             }
         ],
         model="llama3-70b-8192",
     )
+    sent=chat_completion.choices[0].message.content
 
-    return chat_completion.choices[0].message.content
+    if sent.upper().contains("POS"):
+       return "Positive"
+    else:
+        return "Negative"
 def predict_sentiment(text):
     # model=initialise()
 
