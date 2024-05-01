@@ -101,7 +101,7 @@ def GRU_model():
     # model = Model(inputt, x)
     return model
 
-def GRU():
+def GRU1():
     model = GRU_model()
     model.load_weights("./GRU.h5")
     return model
@@ -137,7 +137,7 @@ def predict_sentiment(text):
     model_pred.append(simple_RNN())
     model_pred.append(Simple_LSTM())
     model_pred.append(Final_LSTM())
-    model_pred.append(GRU())
+    model_pred.append(GRU1())
 
     prediction=[]
     for i in range(len(model_pred)-1):
