@@ -106,7 +106,7 @@ def main():
         st.write(f"Sentiment: {sentiment}")
 
     if 'sentiment' in st.session_state:
-        if sentimen==1:
+        if sentimen==0:
             b2="Get Llama Therapy"
         else:
             b2="Get Llama Take on this"
