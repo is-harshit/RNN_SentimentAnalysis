@@ -11,7 +11,7 @@ import numpy as np
 from keras.callbacks import EarlyStopping
 import json
 from groq import Groq
-
+import random
 
 maxlen=29
 
@@ -91,7 +91,9 @@ def predict_sentiment(text):
 
     # prediction = model.predict([text],verbose=0)[0]  # Adjust this line based on how your model expects input
     # return "Negative" if prediction > threshold else "Positive"
-    return llama_response(text)
+
+    sentiment=llama_response(text)
+    return sentiment
 # Streamlit interface
 def main():
     st.title("Sentiment Analysis App")
