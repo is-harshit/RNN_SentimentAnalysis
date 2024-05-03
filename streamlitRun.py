@@ -78,11 +78,11 @@ def simple_LSTM_model():
 
 def Final_LSTM():
     model = lstm_rnn_model()
-    model.load_weights("./sentiment_weights_lstmFin.h5")
+    # model.load_weights("./sentiment_weights_lstmFin.h5")
     return model
 def Simple_LSTM():
     model = simple_LSTM_model()
-    model.load_weights("./Simple_LSTM1.h5")
+    # model.load_weights("./Simple_LSTM1.h5")
     return model
 
 
