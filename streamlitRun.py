@@ -1,5 +1,5 @@
 import streamlit as st
-from keras.src.preprocessing.text import tokenizer_from_json
+# from keras.src.preprocessing.text import tokenizer_from_json
 from tensorflow.keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import Sequential
@@ -18,20 +18,20 @@ maxlen=29
 
 with open('tokenizer_weight.json') as f:
     data = json.load(f)
-    tokenizer = tokenizer_from_json(data)
+    # tokenizer = tokenizer_from_json(data)
 
 def compatibilate(text):
     a = [text]
 
     # Convert the text to sequences of integers using the tokenizer
-    a = tokenizer.texts_to_sequences(a)
+    # a = tokenizer.texts_to_sequences(a)
 
     # Pad the sequences to ensure they have the same length
-    a = pad_sequences(a, padding='post', maxlen=maxlen)
-
+    # a = pad_sequences(a, padding='post', maxlen=maxlen)
+    
     # Reshape the array to fit the model input shape
-    a = np.array(a)
-    a = a.reshape((a.shape[0], a.shape[1], 1))  # Reshape to (1, maxlen, 1)
+    # a = np.array(a)
+    # a = a.reshape((a.shape[0], a.shape[1], 1))  # Reshape to (1, maxlen, 1)
 
     return a
 
