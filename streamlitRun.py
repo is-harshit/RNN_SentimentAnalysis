@@ -132,7 +132,7 @@ def llama_response(msg,mode=0):
 
 def predict_sentiment(text):
 
-    text1=compatibilate(text)
+    # text1=compatibilate(text)
 
 
     model_pred=[]
