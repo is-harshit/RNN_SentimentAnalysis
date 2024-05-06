@@ -1,6 +1,6 @@
 import streamlit as st
 # from keras.src.preprocessing.text import tokenizer_from_json
-from keras.preprocessing.text import Tokenizer
+# from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import Sequential
 import tensorflow as tf
