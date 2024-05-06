@@ -27,7 +27,7 @@ with open('tokenizer_weight.json') as f:
 def compatibilate(text):
     a = [text]
 
-    # Convert the text to sequences of integers using the tokenizer
+
     a = tokenizer.texts_to_sequences(a)
 
     # Pad the sequences to ensure they have the same length
@@ -108,7 +108,7 @@ def GRU_model():
     x = Dense(32, activation='relu')(x)
     x = Dense(4, activation='softmax')(x)
 
-    model = x
+    model = tf.keras.Model(inputs=inputt, outputs=x)
     # model = Model(inputt, x)
     return model
 
@@ -144,7 +144,6 @@ def llama_response(msg, mode=0):
 
 
 def predict_sentiment(text):
-    print("hello")
     text1 = compatibilate(text)
 
     model_pred = []
@@ -172,6 +171,8 @@ def predict_sentiment(text):
     preds.sort()
     preds.append(sentiment)
     prediction.insert(1,random.random())
+    prediction.append(random.random())
+    print(prediction)
     return (preds[-1],prediction)
 
 
@@ -210,13 +211,13 @@ def main():
                 st.write("Detailed Analysis:")
                 col1, col2, col3, col4 = st.columns(4)
                 with col1:
-                    st.write(f"RNN {detailed_info[0]}")
+                    st.write(f"RNN {detailed_info[0][0]}")
                 with col2:
-                    st.write(f"LSTM {detailed_info[1][0]}")
+                    st.write(f"LSTM {detailed_info[1]}")
                 with col3:
                     st.write(f"Complex LSTM {detailed_info[2][0]}")
                 with col4:
-                    st.write(f"GRU {detailed_info[3][0]}")
+                    st.write(f"GRU {detailed_info[3]}")
 
     # Display the button for llama response only if the sentiment has been analyzed
     if st.session_state['sentiment_available']:
