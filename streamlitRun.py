@@ -1,10 +1,11 @@
 import streamlit as st
-# from keras.src.preprocessing.text import tokenizer_from_json
+from keras.src.preprocessing.text import tokenizer_from_json
 from tensorflow.keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import Sequential
 # from tensorflow.keras.models import Model
-from keras.layers import Dense, Dropout,Activation,SimpleRNN, Bidirectional, BatchNormalization,LSTM,Embedding, GRU,Input,GlobalMaxPooling1D,Dropout,Bidirectional
+from keras.layers import Dense, Dropout, Activation, SimpleRNN, Bidirectional, BatchNormalization, LSTM, Embedding, GRU, \
+    Input, GlobalMaxPooling1D, Dropout, Bidirectional
 from keras import optimizers
 from tensorflow.keras.optimizers import Adam
 from keras.preprocessing.sequence import pad_sequences
@@ -14,26 +15,28 @@ import json
 from groq import Groq
 import random
 
-maxlen=29
+maxlen = 29
 
 with open('tokenizer_weight.json') as f:
     data = json.load(f)
-    # tokenizer = tokenizer_from_json(data)
+    tokenizer = tokenizer_from_json(data)
+
 
 def compatibilate(text):
     a = [text]
 
     # Convert the text to sequences of integers using the tokenizer
-    # a = tokenizer.texts_to_sequences(a)
+    a = tokenizer.texts_to_sequences(a)
 
     # Pad the sequences to ensure they have the same length
-    # a = pad_sequences(a, padding='post', maxlen=maxlen)
-    
+    a = pad_sequences(a, padding='post', maxlen=maxlen)
+
     # Reshape the array to fit the model input shape
-    # a = np.array(a)
-    # a = a.reshape((a.shape[0], a.shape[1], 1))  # Reshape to (1, maxlen, 1)
+    a = np.array(a)
+    a = a.reshape((a.shape[0], a.shape[1], 1))  # Reshape to (1, maxlen, 1)
 
     return a
+
 
 def simple_RNN_model():
     model = Sequential()
@@ -48,10 +51,13 @@ def simple_RNN_model():
 
     return model
 
+
 def simple_RNN():
     model = simple_RNN_model()
     model.load_weights("./sentiment_weights_Simple.h5")
     return model
+
+
 def lstm_rnn_model():
     model = Sequential()
     # Using LSTM for improved sequence modeling
@@ -66,40 +72,44 @@ def lstm_rnn_model():
 
     return model
 
+
 def simple_LSTM_model():
     model = Sequential()
     model.add(Embedding(3000, 128))
     model.add(LSTM(128, dropout=0.2, recurrent_dropout=0.2))
     model.add(Dense(1, activation='sigmoid'))
-    model.compile(loss='binary_crossentropy',optimizer='adam',metrics=['accuracy'])
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
     return model
 
 
 def Final_LSTM():
     model = lstm_rnn_model()
-    # model.load_weights("./sentiment_weights_lstmFin.h5")
+    model.load_weights("./sentiment_weights_lstmFin.h5")
     return model
+
+
 def Simple_LSTM():
     model = simple_LSTM_model()
-    # model.load_weights("./Simple_LSTM1.h5")
+    model.load_weights("./Simple_LSTM1.h5")
     return model
 
 
 def GRU_model():
     learning_rate = 0.0001  # Set your desired learning rate here
-    v=9594
-    inputt=Input(shape=(maxlen,))
-    D=100
+    v = 9594
+    inputt = Input(shape=(maxlen,))
+    D = 100
     x = Embedding(v + 1, D)(inputt)
     x = Dropout(0.5)(x)
     x = Bidirectional(GRU(200))(x)
     x = Dense(32, activation='relu')(x)
     x = Dense(4, activation='softmax')(x)
 
-    model=x
+    model = x
     # model = Model(inputt, x)
     return model
+
 
 def GRU1():
     model = GRU_model()
@@ -107,15 +117,16 @@ def GRU1():
     return model
 
 
-def llama_response(msg,mode=0):
+def llama_response(msg, mode=0):
     client = Groq(
         api_key="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",
+        # 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
     )
 
-    if mode==0:
-       te="give the response of this sentence as positive or negative only: " + msg
+    if mode == 0:
+        te = "give the response of this sentence as positive or negative only: " + msg
     else:
-        te= "what is ur take on my statement? " +msg
+        te = "what is ur take on my statement? " + msg
     chat_completion = client.chat.completions.create(
         messages=[
             {
@@ -126,33 +137,32 @@ def llama_response(msg,mode=0):
         model="llama3-70b-8192",
     )
 
-    sent=chat_completion.choices[0].message.content
+    sent = chat_completion.choices[0].message.content
 
     return sent
 
+
 def predict_sentiment(text):
+    text1 = compatibilate(text)
 
-    # text1=compatibilate(text)
-
-
-    model_pred=[]
+    model_pred = []
     model_pred.append(simple_RNN())
     model_pred.append(Simple_LSTM())
     model_pred.append(Final_LSTM())
     model_pred.append(GRU1())
 
-    prediction=[]
+    prediction = []
     # for i in range(len(model_pred)-1):
     #     prediction.append(i.predict([text1],verbose=0)[0])
 
-    threshold= [0.5035825,0.6317706,0.6014326,0.5776334]
+    threshold = [0.5035825, 0.6317706, 0.6014326, 0.5776334]
 
-    preds=[]
+    preds = []
 
     sentiment = llama_response(text)
 
-    for i,val in enumerate(prediction):
-        if val>threshold[i]:
+    for i, val in enumerate(prediction):
+        if val > threshold[i]:
             preds.append(1)
         else:
             preds.append(0)
@@ -160,6 +170,7 @@ def predict_sentiment(text):
     preds.sort()
     preds.append(sentiment)
     return preds[-1]
+
 
 # Streamlit interface
 def main():
@@ -193,6 +204,6 @@ def main():
         st.session_state['sentiment'] = ""
         st.session_state['sentiment_available'] = False  # Reset the availability of sentiment analysis
 
+
 if __name__ == '__main__':
     main()
-    
