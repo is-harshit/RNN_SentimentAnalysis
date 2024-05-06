@@ -177,6 +177,7 @@ def predict_sentiment(text):
 def main():
     import streamlit as st
 
+    print("hello")
     st.title("Sentiment Analysis App")
     user_input = st.text_area("Enter Text Here:")
 
