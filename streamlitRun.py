@@ -191,7 +191,7 @@ def main():
         ret = predict_sentiment(user_input)
         sentiment = ret[0]
         st.session_state['additional_info'] = ret[1]  # Save additional data for new button functionality
-        print(ret[1])
+
         st.session_state['sentiment'] = sentiment
         st.session_state['sentiment_available'] = True
         if "NEG" in sentiment.upper():
