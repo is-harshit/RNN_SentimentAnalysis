@@ -149,7 +149,7 @@ def predict_sentiment(text):
 
     model_pred = []
     model_pred.append(simple_RNN())
-    model_pred.append(Simple_LSTM())
+    # model_pred.append(Simple_LSTM())
     model_pred.append(Final_LSTM())
     model_pred.append(GRU1())
 
@@ -171,7 +171,7 @@ def predict_sentiment(text):
 
     preds.sort()
     preds.append(sentiment)
-    prediction.insert(0,random.random())
+    prediction.insert(1,random.random())
     return (preds[-1],prediction)
 
 
