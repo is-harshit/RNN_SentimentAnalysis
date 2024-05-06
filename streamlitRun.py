@@ -4,6 +4,7 @@ import streamlit as st
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import Sequential
 import tensorflow as tf
+from keras.models import load_model
 # from tensorflow.keras.models import Model
 from keras.layers import Dense, Dropout, Activation, SimpleRNN, Bidirectional, BatchNormalization, LSTM, Embedding, GRU, \
     Input, GlobalMaxPooling1D, Dropout, Bidirectional
