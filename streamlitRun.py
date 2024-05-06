@@ -120,7 +120,7 @@ def GRU1():
 def llama_response(msg, mode=0):
     client = Groq(
         api_key="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",
-        # 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
+
     )
 
     if mode == 0:
