@@ -1,13 +1,14 @@
 import streamlit as st
-from keras.src.preprocessing.text import tokenizer_from_json
+# from keras.src.preprocessing.text import tokenizer_from_json
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import Sequential
+import tensorflow as tf
 # from tensorflow.keras.models import Model
 from keras.layers import Dense, Dropout, Activation, SimpleRNN, Bidirectional, BatchNormalization, LSTM, Embedding, GRU, \
     Input, GlobalMaxPooling1D, Dropout, Bidirectional
 from keras import optimizers
-from tensorflow.keras.optimizers import Adam
+from keras.optimizers import Adam
 from keras.preprocessing.sequence import pad_sequences
 import numpy as np
 from keras.callbacks import EarlyStopping
@@ -19,7 +20,7 @@ maxlen = 29
 
 with open('tokenizer_weight.json') as f:
     data = json.load(f)
-    tokenizer = tokenizer_from_json(data)
+    tokenizer = tf.keras.preprocessing.text.tokenizer_from_json(data)
 
 
 def compatibilate(text):
@@ -120,7 +121,6 @@ def GRU1():
 def llama_response(msg, mode=0):
     client = Groq(
         api_key="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",
-
     )
 
     if mode == 0:
