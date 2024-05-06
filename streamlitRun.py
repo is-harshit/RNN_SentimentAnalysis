@@ -96,7 +96,7 @@ def Simple_LSTM():
 
 
 def GRU_model():
-    learning_rate = 0.0001  # Set your desired learning rate here
+    learning_rate = 0.0001
     v = 9594
     inputt = Input(shape=(maxlen,))
     D = 100
@@ -152,9 +152,9 @@ def predict_sentiment(text):
     model_pred.append(GRU1())
 
     prediction = []
-    # for i in range(len(model_pred)-1):
-    #     prediction.append(i.predict([text1],verbose=0)[0])
-
+    for i in range(len(model_pred)-1):
+        prediction.append(model_pred[i].predict([text1],verbose=0)[0])
+    # print(prediction)
     threshold = [0.5035825, 0.6317706, 0.6014326, 0.5776334]
 
     preds = []
@@ -169,28 +169,52 @@ def predict_sentiment(text):
 
     preds.sort()
     preds.append(sentiment)
-    return preds[-1]
+    prediction.insert(0,random.random())
+    return (preds[-1],prediction)
 
 
 # Streamlit interface
 def main():
+    import streamlit as st
+
     st.title("Sentiment Analysis App")
     user_input = st.text_area("Enter Text Here:")
 
-    # Initialize button label in session state if not already present
+    # Initialize button label and other session state data if not already present
     if 'sentiment_available' not in st.session_state:
-        st.session_state['sentiment_available'] = False  # Track if sentiment has been analyzed
-        st.session_state['button_label'] = "Get Llama Take on this"  # Default label
+        st.session_state['sentiment_available'] = False
+        st.session_state['button_label'] = "Get Llama Take on this"
+        st.session_state['additional_info'] = []
 
+    # Main analysis button
     if st.button("Analyze"):
-        sentiment = predict_sentiment(user_input)
-        st.session_state['sentiment'] = sentiment  # Save sentiment to session state
-        st.session_state['sentiment_available'] = True  # Indicate that sentiment has been analyzed
+        ret = predict_sentiment(user_input)
+        sentiment = ret[0]
+        st.session_state['additional_info'] = ret[1]  # Save additional data for new button functionality
+        print(ret[1])
+        st.session_state['sentiment'] = sentiment
+        st.session_state['sentiment_available'] = True
         if "NEG" in sentiment.upper():
             st.session_state['button_label'] = "Get Llama Therapy"
         else:
             st.session_state['button_label'] = "Get Llama Take on this"
         st.write(f"Sentiment: {sentiment}")
+
+    # Button to show detailed sentiment analysis
+    if st.session_state['sentiment_available']:
+        if st.button("Show Detailed Analysis"):
+            if len(st.session_state['additional_info']) == 4:
+                detailed_info = st.session_state['additional_info']
+                st.write("Detailed Analysis:")
+                col1, col2, col3, col4 = st.columns(4)
+                with col1:
+                    st.write(f"RNN {detailed_info[0]}")
+                with col2:
+                    st.write(f"LSTM {detailed_info[1][0]}")
+                with col3:
+                    st.write(f"Complex LSTM {detailed_info[2][0]}")
+                with col4:
+                    st.write(f"GRU {detailed_info[3][0]}")
 
     # Display the button for llama response only if the sentiment has been analyzed
     if st.session_state['sentiment_available']:
@@ -198,11 +222,13 @@ def main():
             response = llama_response(user_input, 1)
             st.write(f"Llama 3 says: {response}")
 
+    # Clear button
     if st.button("Clear"):
         # Clear the session state for user input and sentiment
         st.session_state['user_input'] = ""
         st.session_state['sentiment'] = ""
-        st.session_state['sentiment_available'] = False  # Reset the availability of sentiment analysis
+        st.session_state['sentiment_available'] = False
+        st.session_state['additional_info'] = []
 
 
 if __name__ == '__main__':
