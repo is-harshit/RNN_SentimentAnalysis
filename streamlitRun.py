@@ -146,7 +146,7 @@ def predict_sentiment(text):
     text1 = compatibilate(text)
 
     model_pred = []
-    model_pred.append(simple_RNN())
+    # model_pred.append(simple_RNN())
     model_pred.append(Simple_LSTM())
     model_pred.append(Final_LSTM())
     model_pred.append(GRU1())
